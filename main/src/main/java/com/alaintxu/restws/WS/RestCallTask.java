@@ -1,10 +1,11 @@
-package com.alaintxu.restws;
+package com.alaintxu.restws.WS;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
 
-import org.json.JSONException;
+import com.alaintxu.restws.MainActivity;
+
 import org.json.JSONObject;
 
 /**

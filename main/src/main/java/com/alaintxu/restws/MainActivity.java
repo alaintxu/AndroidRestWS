@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.Toast;
+
+import com.alaintxu.restws.Settings.SettingsActivity;
+import com.alaintxu.restws.Settings.SettingsFunctions;
+import com.alaintxu.restws.WS.RestCallTask;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,7 +50,7 @@ public class MainActivity extends Activity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
-        checkKey("testing_rest_key");
+        checkKey();
     }
 
     @Override
@@ -107,15 +112,16 @@ public class MainActivity extends Activity
 
     private void openSettings(){
         // Display the fragment as the main content.
-        getFragmentManager().beginTransaction()
+        /*getFragmentManager().beginTransaction()
                 .replace(android.R.id.content, new SettingsFragment())
-                .commit();
-
+                .commit();*/
+        startActivity(new Intent(this, SettingsActivity.class));
     }
 
-    public void checkKey(String key){
-
-        RestCallTask rct = new RestCallTask();
+    public void checkKey(){
+        String server_url   =   SettingsFunctions.getVariable(getBaseContext(),"server_url");
+        String key          =   SettingsFunctions.getVariable(getBaseContext(),"key");
+        RestCallTask rct = new RestCallTask(server_url);
         rct.setMyActivity(this);
         JSONObject jsonInput = new JSONObject();
         try {
@@ -133,19 +139,27 @@ public class MainActivity extends Activity
     }
 
     public void setCheckKeyResponse(JSONObject jsonResponse){
-        String msg;
-        Boolean error = false;
+        String error    =   "";
+        String action   =   "";
+        String key      =   "";
         try{
-            msg   =   jsonResponse.getString("error");
-            //msg =   jsonResponse.getString("key");
-        }catch (JSONException e) {
-            error = true;
-            msg =   "setCheckKeyResponse - "+e.getMessage();
-            Log.e("MainActivity", msg);
+            error   = jsonResponse.getString("error");
+        }catch (JSONException e) {}
 
+        if(error.equals("")) {
+            try {
+                key      = jsonResponse.getString("key");
+                action   = jsonResponse.getString("action");
+            } catch (JSONException e) {
+                error = "setCheckKeyResponse - " + e.getMessage();
+                Log.e("MainActivity", error);
+            }
         }
-        if(error)   Toast.makeText(this, "key="+msg, Toast.LENGTH_SHORT).show();
-        else        Toast.makeText(this, "Error="+msg, Toast.LENGTH_SHORT).show();
+        if(error.equals("")){
+            Toast.makeText(this, "key: "+key+" - "+" action: "+action, Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(this, "Error: "+error, Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void setGetDataResponse(JSONObject jsonResponse){

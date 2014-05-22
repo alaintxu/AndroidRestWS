@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <Preference
-        android:key="pref_rest_key"
-        android:summary="@string/pref_rest_key_summary"
-        android:title="@string/pref_rest_key_title"
-        android:layout="@layout/pref_key_layout"/>
-
-</PreferenceScreen>

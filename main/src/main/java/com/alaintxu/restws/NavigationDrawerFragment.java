@@ -248,7 +248,7 @@ public class NavigationDrawerFragment extends Fragment {
         }
 
         if (item.getItemId() == R.id.action_example) {
-            ((MainActivity)getActivity()).checkKey("testing_rest_key");
+            ((MainActivity)getActivity()).checkKey();
             return true;
         }
 
